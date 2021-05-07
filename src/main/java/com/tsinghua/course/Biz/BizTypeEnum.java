@@ -10,8 +10,10 @@ import com.tsinghua.course.Biz.Controller.UserController;
 public enum BizTypeEnum {
     /** 以下为用户业务类型 */
     USER_LOGIN(UserController.class, "/user/login", "用户登录"),
+    USER_LOGOUT(UserController.class, "/user/logout", "用户注销"),
+    USER_SIGN_UP(UserController.class, "/user/signup", "用户注册"),
 
-    /** 定时任务业务测试 */
+  /** 定时任务业务测试 */
     LOG_TEST(TimerController.class, null, "定时日志测试"),
 
     /** 测试业务，在书写正式代码时可以删除，在书写正式代码前先运行测试业务，如果测试业务无问题说明各模块正常 */

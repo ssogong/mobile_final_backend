@@ -1,12 +1,14 @@
 package com.tsinghua.course.Biz.Controller;
 
 import com.tsinghua.course.Base.Annotation.BizType;
+import com.tsinghua.course.Base.Enum.UserType;
 import com.tsinghua.course.Biz.BizTypeEnum;
 import com.tsinghua.course.Base.Error.CourseWarn;
 import com.tsinghua.course.Base.Error.UserWarnEnum;
 import com.tsinghua.course.Base.Model.User;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.In.LoginInParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.In.SignupInParams;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
 import com.tsinghua.course.Frame.Util.*;
 import io.netty.channel.ChannelHandlerContext;
@@ -43,6 +45,33 @@ public class UserController {
                 httpSession.setUsername(username);
             }
         }
+        return new CommonOutParams(true);
+    }
+
+    /** 用户注册业务 */
+    @BizType(BizTypeEnum.USER_SIGN_UP)
+    public CommonOutParams userSignUp(SignupInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        String password = inParams.getPassword();
+        String userType = inParams.getUserType();
+        if (username == null || password == null)
+            throw new CourseWarn(UserWarnEnum.SIGNUP_NULL_FAILED);
+        /** 检查用户是否已存在 */
+        User tmpUser = userProcessor.getUserByUsername(username);
+        if (tmpUser != null)
+            throw new CourseWarn(UserWarnEnum.SIGNUP_EXIST_FAILED);
+
+        /** 添加用户 */
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        /** 没有userType字段，默认为普通用户 */
+        if (userType != null)
+            user.setUserType(UserType.ADMIN);
+        else
+            user.setUserType(UserType.NORMAL);
+        userProcessor.insertUser(user);
+
         return new CommonOutParams(true);
     }
 

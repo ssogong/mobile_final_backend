@@ -5,10 +5,12 @@ package com.tsinghua.course.Base.Error;
  **/
 public enum UserWarnEnum implements ExceptionInterface {
     LOGIN_FAILED("UserWarn001", "用户或密码不正确"),
-
     NEED_LOGIN("UserWarn002", "用户未登录或登录已过期"),
 
-    PERMISSION_DENIED("UserWarn003", "无权限访问对应内容")
+    PERMISSION_DENIED("UserWarn003", "无权限访问对应内容"),
+
+    SIGNUP_NULL_FAILED("UserWarn004", "用户名或密码不能为空"),
+    SIGNUP_EXIST_FAILED("UserWarn005", "用户已存在")
     ;
 
     UserWarnEnum(String code, String msg) {
