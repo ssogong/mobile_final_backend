@@ -31,6 +31,18 @@ public class User {
     String password;
     // 用户类型
     UserType userType;
+    // 注册时间
+    String dateJoined;
+    // 实名
+    String realName;
+    // 性别
+    String gender;
+    // 生日
+    String dateOfBirth;
+    // 头像url
+    String avartar;
+
+
     // 测试数组
     String[] testArr;
     // 测试对象
@@ -92,5 +104,42 @@ public class User {
 
     public void setSubObj(SubObj subObj) {
         this.subObj = subObj;
+    }
+    public String getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(String dateJoined) {
+        this.dateJoined = dateJoined;
+    }
+
+    public String getAvartar() {
+        return avartar;
+    }
+
+    public void setAvartar(String avartar) {
+        this.avartar = avartar;
+    }
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

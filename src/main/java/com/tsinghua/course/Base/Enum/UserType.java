@@ -4,8 +4,8 @@ package com.tsinghua.course.Base.Enum;
  * @描述 用户类型枚举
  **/
 public enum UserType {
-    NORMAL("普通用户"),
-    ADMIN("管理员")
+    NORMAL("User"),
+    ADMIN("Admin")
     ;
 
     UserType(String name) {

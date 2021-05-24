@@ -9,11 +9,15 @@ import com.tsinghua.course.Base.Model.User;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.In.LoginInParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.In.SignupInParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.LoginOutParams;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
 import com.tsinghua.course.Frame.Util.*;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @描述 用户控制器，用于执行用户相关的业务
@@ -45,26 +49,34 @@ public class UserController {
                 httpSession.setUsername(username);
             }
         }
-        return new CommonOutParams(true);
+        return new LoginOutParams(user);
     }
 
     /** 用户注册业务 */
     @BizType(BizTypeEnum.USER_SIGN_UP)
     public CommonOutParams userSignUp(SignupInParams inParams) throws Exception {
-        String username = inParams.getUsername();
+        String resisterName = inParams.getResisterName();
         String password = inParams.getPassword();
         String userType = inParams.getUserType();
-        if (username == null || password == null)
+        String realName = inParams.getReal_name();
+        String dateOfBirth = inParams.getDate_of_birth();
+        String gender = inParams.getGender();
+        if (resisterName == null || password == null)
             throw new CourseWarn(UserWarnEnum.SIGNUP_NULL_FAILED);
         /** 检查用户是否已存在 */
-        User tmpUser = userProcessor.getUserByUsername(username);
+        User tmpUser = userProcessor.getUserByUsername(resisterName);
         if (tmpUser != null)
             throw new CourseWarn(UserWarnEnum.SIGNUP_EXIST_FAILED);
 
         /** 添加用户 */
         User user = new User();
-        user.setUsername(username);
+        user.setUsername(resisterName);
         user.setPassword(password);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        user.setDateJoined(simpleDateFormat.format(new Date()));
+        user.setRealName(realName);
+        user.setDateOfBirth(dateOfBirth);
+        user.setGender(gender);
         /** 没有userType字段，默认为普通用户 */
         if (userType != null)
             user.setUserType(UserType.ADMIN);
