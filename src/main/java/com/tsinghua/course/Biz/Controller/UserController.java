@@ -1,12 +1,15 @@
 package com.tsinghua.course.Biz.Controller;
 
 import com.tsinghua.course.Base.Annotation.BizType;
+import com.tsinghua.course.Base.Annotation.NeedLogin;
 import com.tsinghua.course.Base.Enum.UserType;
 import com.tsinghua.course.Biz.BizTypeEnum;
 import com.tsinghua.course.Base.Error.CourseWarn;
 import com.tsinghua.course.Base.Error.UserWarnEnum;
 import com.tsinghua.course.Base.Model.User;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.In.ChangePassInParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.In.EditUserInParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.In.LoginInParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.In.SignupInParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.LoginOutParams;
@@ -83,6 +86,32 @@ public class UserController {
         else
             user.setUserType(UserType.NORMAL);
         userProcessor.insertUser(user);
+
+        return new CommonOutParams(true);
+    }
+    /** 修改密码 */
+    @NeedLogin
+    @BizType(BizTypeEnum.USER_CHANGE_PASS)
+    public CommonOutParams changePass(ChangePassInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        String newPass = inParams.getNew_password();
+        if (newPass == null)
+            throw new CourseWarn(UserWarnEnum.CHANGE_PASS_FAILED);
+        userProcessor.changePass(username, newPass);
+
+        return new CommonOutParams(true);
+    }
+
+    /** 修改个人信息 */
+    @NeedLogin
+    @BizType(BizTypeEnum.USER_EDIT)
+    public CommonOutParams editUser(EditUserInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        String realNameNew = inParams.getReal_name();
+        String dateOfBirthNew = inParams.getDate_of_birth();
+        if (realNameNew == null || dateOfBirthNew == null)
+            throw new CourseWarn(UserWarnEnum.EDIT_FAILED);
+        userProcessor.editUser(username, realNameNew, dateOfBirthNew);
 
         return new CommonOutParams(true);
     }

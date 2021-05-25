@@ -15,4 +15,10 @@ public class KeyConstant {
     /** 以下为User关键key */
     // 用户名
     public static final String USERNAME = "username";
+    // 密码
+    public static final String PASSWORD = "password";
+    // 实名
+    public static final String REALNAME = "realName";
+    // 生日
+    public static final String DATE_OF_BIRTH = "dateOfBirth";
 }

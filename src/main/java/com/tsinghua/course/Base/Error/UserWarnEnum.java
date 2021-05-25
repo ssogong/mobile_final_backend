@@ -10,7 +10,10 @@ public enum UserWarnEnum implements ExceptionInterface {
     PERMISSION_DENIED("UserWarn003", "无权限访问对应内容"),
 
     SIGNUP_NULL_FAILED("UserWarn004", "用户名或密码不能为空"),
-    SIGNUP_EXIST_FAILED("UserWarn005", "用户已存在")
+    SIGNUP_EXIST_FAILED("UserWarn005", "用户已存在"),
+
+    EDIT_FAILED("UserWarn006", "修改个人信息失败"),
+    CHANGE_PASS_FAILED("UserWarn007", "修改密码失败"),
     ;
 
     UserWarnEnum(String code, String msg) {
