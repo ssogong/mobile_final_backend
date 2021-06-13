@@ -41,6 +41,8 @@ public class User {
     String dateOfBirth;
     // 头像url
     String avartar;
+    // 联系人列表
+    String[] contactList;
 
 
     // 测试数组
@@ -141,5 +143,12 @@ public class User {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+    public String[] getContactList() {
+        return contactList;
+    }
+
+    public void setContactList(String[] contactList) {
+        this.contactList = contactList;
     }
 }

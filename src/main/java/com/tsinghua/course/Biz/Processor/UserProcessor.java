@@ -40,6 +40,19 @@ public class UserProcessor {
         Query query = new Query(Criteria.where(KeyConstant.USERNAME).is(username));
         Update update = new Update().set(KeyConstant.REALNAME, realName);
         update.set(KeyConstant.DATE_OF_BIRTH, dateOfBirth);
-        mongoTemplate.updateMulti(query, update, User.class);
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+    /** 上传头像 */
+    public void uploadImage(String username, String url) {
+        Query query = new Query(Criteria.where(KeyConstant.USERNAME).is(username));
+        Update update = new Update().set(KeyConstant.AVARTAR_URL, url);
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+     /** 添加联系人 */
+    public void addToContact(String username, String newUsername) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.USERNAME).is(username));
+        Update update = new Update().addToSet(KeyConstant.CONTACT_LIST, newUsername);
+        mongoTemplate.updateFirst(query, update, User.class);
     }
 }

@@ -10,4 +10,6 @@ public class GlobalConstant {
     public static final String STACK_SPLIT = "/";
     /** 日志分隔符 */
     public static final String LOG_SPLIT = "-";
+    /** 静态文件路径 */
+    public static final String STATIC_PATH = "/Users/jungjun/tmp/";
 }

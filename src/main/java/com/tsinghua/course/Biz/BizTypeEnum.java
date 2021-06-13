@@ -15,6 +15,11 @@ public enum BizTypeEnum {
     USER_CHANGE_PASS(UserController.class, "/user/pass", "修改密码"),
     USER_EDIT(UserController.class, "/user/edit", "修改个人信息"),
     USER_IMAGE(UserController.class, "/user/image", "上传头像"),
+    CONTACT_GET(UserController.class, "/contact/get", "获取联系人"),
+    CONTACT_ADD(UserController.class, "/contact/add", "添加联系人"),
+    CONTACT_DELETE(UserController.class, "/contact/delete", "删除联系人"),
+
+    /** 动态业务类型 */
 
     /** 定时任务业务测试 */
     LOG_TEST(TimerController.class, null, "定时日志测试"),

@@ -21,4 +21,8 @@ public class KeyConstant {
     public static final String REALNAME = "realName";
     // 生日
     public static final String DATE_OF_BIRTH = "dateOfBirth";
+    // 头像url
+    public static final String AVARTAR_URL = "avartarUrl";
+    // 联系人列表
+    public static final String CONTACT_LIST = "contactList";
 }

@@ -2,23 +2,27 @@ package com.tsinghua.course.Biz.Controller;
 
 import com.tsinghua.course.Base.Annotation.BizType;
 import com.tsinghua.course.Base.Annotation.NeedLogin;
+import com.tsinghua.course.Base.Constant.GlobalConstant;
 import com.tsinghua.course.Base.Enum.UserType;
 import com.tsinghua.course.Biz.BizTypeEnum;
 import com.tsinghua.course.Base.Error.CourseWarn;
 import com.tsinghua.course.Base.Error.UserWarnEnum;
 import com.tsinghua.course.Base.Model.User;
+import com.tsinghua.course.Biz.Controller.Params.CommonInParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
-import com.tsinghua.course.Biz.Controller.Params.UserParams.In.ChangePassInParams;
-import com.tsinghua.course.Biz.Controller.Params.UserParams.In.EditUserInParams;
-import com.tsinghua.course.Biz.Controller.Params.UserParams.In.LoginInParams;
-import com.tsinghua.course.Biz.Controller.Params.UserParams.In.SignupInParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.In.*;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.AvartarOutParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.ContactOutParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.LoginOutParams;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
 import com.tsinghua.course.Frame.Util.*;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.multipart.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -116,5 +120,39 @@ public class UserController {
         return new CommonOutParams(true);
     }
 
+    /** 上传头像 */
+    @NeedLogin
+    @BizType(BizTypeEnum.USER_IMAGE)
+    public CommonOutParams uploadUserImage(UploadUserImageInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        FileUpload file = inParams.getFile();
+        String oldFileName = file.getFilename();
+        String newFileName = username + oldFileName.substring(oldFileName.lastIndexOf("."));
+        String url = GlobalConstant.STATIC_PATH + newFileName;
+        FileOutputStream out = new FileOutputStream(url);
+        out.write(file.get());
+        out.flush();
+        out.close();
+        userProcessor.uploadImage(username, url);
+        return new AvartarOutParams(url);
+    }
+    /** 获取联系人 */
+    @NeedLogin
+    @BizType(BizTypeEnum.CONTACT_GET)
+    public ContactOutParams getContactList(CommonInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        User user = userProcessor.getUserByUsername(username);
+        return new ContactOutParams(user.getContactList());
+    }
 
+    /** 添加联系人 */
+    @NeedLogin
+    @BizType(BizTypeEnum.CONTACT_ADD)
+    public CommonOutParams addToContact(AddToContactInParams inParams) {
+        String username = inParams.getUsername();
+        String newUsername = inParams.getNew_username();
+        userProcessor.addToContact(username, newUsername);
+        userProcessor.addToContact(newUsername, username);
+        return new CommonOutParams(true);
+    }
 }
