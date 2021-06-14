@@ -25,5 +25,9 @@ public class PostProcessor {
         query.addCriteria(Criteria.where(KeyConstant.USERNAME).is(username));
         return mongoTemplate.find(query, Post.class);
     }
+    /** 发布一个动态 */
+    public void addPost(Post post) {
+        mongoTemplate.insert(post);
+    }
 
 }
