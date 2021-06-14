@@ -1,5 +1,6 @@
 package com.tsinghua.course.Biz;
 
+import com.tsinghua.course.Biz.Controller.PostController;
 import com.tsinghua.course.Biz.Controller.TestController;
 import com.tsinghua.course.Biz.Controller.TimerController;
 import com.tsinghua.course.Biz.Controller.UserController;
@@ -20,6 +21,10 @@ public enum BizTypeEnum {
     CONTACT_DELETE(UserController.class, "/contact/delete", "删除联系人"),
 
     /** 动态业务类型 */
+    POST_GET_ALL(PostController.class, "/post/getAll", "获取所有动态"),
+    POST_ADD(PostController.class, "/post/add", "添加动态"),
+    POST_GET_REACTION(PostController.class, "/post/getReaction", "获取动态点赞和评论"),
+    POST_ADD_REACTION(PostController.class, "/post/addReaction", "对动态点赞或评论"),
 
     /** 定时任务业务测试 */
     LOG_TEST(TimerController.class, null, "定时日志测试"),
