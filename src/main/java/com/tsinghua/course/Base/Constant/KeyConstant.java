@@ -39,6 +39,8 @@ public class KeyConstant {
     /** 以下为CharRoom关键key */
     // 房间id
     public static final String ROOM_ID = "roomId";
+    // 消息id
+    public static final String MESSAGE_ID = "message_id";
     // 成员列表
     public static final String USER_LIST = "userList";
     // 消息列表

@@ -6,6 +6,7 @@ import com.tsinghua.course.Base.Constant.GlobalConstant;
 import com.tsinghua.course.Base.Model.ChatRoom;
 import com.tsinghua.course.Base.Model.User;
 import com.tsinghua.course.Biz.BizTypeEnum;
+import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.DeleteMessageInParams;
 import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.MakeRoomInParams;
 import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.SendMessageInParams;
 import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetMyRoomsOutParams;
@@ -117,6 +118,25 @@ public class ChatController {
         // 添加到room
         chatProcessor.addMessageToList(roomId, message);
 
+        return new CommonOutParams(true);
+    }
+
+    /**
+     * 删除一条消息
+     */
+    @BizType(BizTypeEnum.CHAT_DELETE_MESSAGE)
+    public CommonOutParams deleteMessage(DeleteMessageInParams inParams) throws Exception {
+        String roomId = inParams.getRoom_id();
+        String messageId = inParams.getMessage_id();
+        ChatRoom room = chatProcessor.getRoomByRoomId(roomId);
+        List<Map<String, String>> messages = room.getMessages();
+        for (int i = 0; i < messages.size(); i++) {
+            if (messages.get(i).get("message_id").equals(messageId)) {
+                messages.remove(i);
+                break;
+            }
+        }
+        chatProcessor.updateMessages(roomId, messages);
         return new CommonOutParams(true);
     }
 

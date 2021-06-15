@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -21,6 +22,12 @@ public class ChatProcessor {
     @Autowired
     MongoTemplate mongoTemplate;
 
+    /** 根据房间名获取房间 */
+    public ChatRoom getRoomByRoomId(String roomId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.ROOM_ID).is(roomId));
+        return mongoTemplate.findOne(query, ChatRoom.class);
+    }
     /** 添加一个房间 */
     public void insertRoom(ChatRoom chatRoom) {
         mongoTemplate.insert(chatRoom);
@@ -44,6 +51,13 @@ public class ChatProcessor {
         Query query = new Query();
         query.addCriteria(Criteria.where(KeyConstant.ROOM_ID).is(roomId));
         Update update = new Update().addToSet(KeyConstant.MESSAGES, message);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+    /** 更新消息 */
+    public void updateMessages(String roomId, List<Map<String, String>> messages) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.ROOM_ID).is(roomId));
+        Update update = new Update().set(KeyConstant.MESSAGES, messages);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 }
