@@ -65,7 +65,8 @@ public class PostController {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         post.setDate(simpleDateFormat.format(new Date()));
         // 文字
-        post.setPostTextMessage(inParams.getPost_text_message());
+        if (inParams.getPost_text_message() != null)
+            post.setPostTextMessage(inParams.getPost_text_message());
         // 图片list
         List<FileUpload> imageList = inParams.getPost_photo_message();
         if (imageList != null) {
@@ -74,6 +75,7 @@ public class PostController {
                 String url = ChatController.DownloadFileToLocal(file);
                 tmpImageList.add(url);
             }
+            post.initPostPhotoMessageList();
             post.setPostPhotoMessageList(tmpImageList);
         }
         // 视频

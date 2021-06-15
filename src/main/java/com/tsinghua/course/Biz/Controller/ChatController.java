@@ -12,6 +12,7 @@ import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetMyRoomsOutPar
 import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetUserListOutParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonInParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.In.EditUserInParams;
 import com.tsinghua.course.Biz.Processor.ChatProcessor;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
 import io.netty.handler.codec.http.multipart.FileUpload;
@@ -140,6 +141,36 @@ public class ChatController {
         chatProcessor.updateMessages(roomId, messages);
         return new CommonOutParams(true);
     }
+    /**
+     * 退出群聊
+     */
+    @NeedLogin
+    @BizType(BizTypeEnum.CHAT_EXIT)
+    public CommonOutParams exitFromRoom(ExitRoomInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        String roomId = inParams.getRoom_id();
+        User user = userProcessor.getUserByUsername(username);
+        ChatRoom room = chatProcessor.getRoomByRoomId(roomId);
+        List<Map<String, String>> roomList = user.getRoomList();
+        for (int i = 0; i < roomList.size(); i++) {
+            if (roomList.get(i).get("id").equals(roomId)) {
+                roomList.remove(i);
+                break;
+            }
+        }
+        chatProcessor.updateRoomList(username, roomList);
+
+        List<Map<String, String>> userList = room.getUserList();
+        for (int i = 0; i < userList.size(); i++) {
+            if (userList.get(i).get("username").equals(username)) {
+                userList.remove(i);
+                break;
+            }
+        }
+        chatProcessor.updateUserList(roomId, userList);
+
+        return new CommonOutParams(true);
+    }
 
     /**
      * 获取消息列表
@@ -155,11 +186,36 @@ public class ChatController {
     /**
      * 获取成员列表
      */
+    @NeedLogin
     @BizType(BizTypeEnum.CHAT_GET_MEMBERS_INFO)
     public GetUserListOutParams getUserList(GetUserListInParams inParams) throws Exception {
         String roomId = inParams.getRoom_id();
         ChatRoom room = chatProcessor.getRoomByRoomId(roomId);
         return new GetUserListOutParams(room.getUserList());
+    }
+
+    /**
+     * 邀请用户到群聊
+     */
+    @NeedLogin
+    @BizType(BizTypeEnum.CHAT_INVITE)
+    public CommonOutParams inviteUserToRoom(InviteUserInParams inParams) throws Exception {
+        String inviteUsername = inParams.getInvite_username();
+        String roomId = inParams.getRoom_id();
+        User inviteUser = userProcessor.getUserByUsername(inviteUsername);
+        Map<String, String> userInfo = new HashMap<>();
+        userInfo.put("username", inviteUsername);
+        userInfo.put("real_name", inviteUser.getRealName());
+        userInfo.put("avartar", inviteUser.getAvartar());
+        chatProcessor.addToUserList(roomId, userInfo);
+
+        ChatRoom room = chatProcessor.getRoomByRoomId(roomId);
+        Map<String, String> roomInfo = new HashMap<>();
+        roomInfo.put("id", roomId);
+        roomInfo.put("room_name", room.getRoomName());
+        chatProcessor.addToRoomList(inviteUsername, roomInfo);
+
+        return new CommonOutParams(true);
     }
 
     static String DownloadFileToLocal(FileUpload file) throws IOException {

@@ -39,6 +39,13 @@ public class ChatProcessor {
         Update update = new Update().addToSet(KeyConstant.ROOM_LIST, room_info);
         mongoTemplate.updateFirst(query, update, User.class);
     }
+    /** 更新用户聊天室 */
+    public void updateRoomList(String username, List<Map<String, String>> roomList) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.USERNAME).is(username));
+        Update update = new Update().set(KeyConstant.ROOM_LIST, roomList);
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
     /** 添加用户到聊天室 */
     public void addToUserList(String roomId, Map<String, String> user_info) {
         Query query = new Query();
@@ -58,6 +65,13 @@ public class ChatProcessor {
         Query query = new Query();
         query.addCriteria(Criteria.where(KeyConstant.ROOM_ID).is(roomId));
         Update update = new Update().set(KeyConstant.MESSAGES, messages);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+    /** 更新用户列表 */
+    public void updateUserList(String roomId, List<Map<String, String>> userList) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.ROOM_ID).is(roomId));
+        Update update = new Update().set(KeyConstant.USER_LIST, userList);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 }

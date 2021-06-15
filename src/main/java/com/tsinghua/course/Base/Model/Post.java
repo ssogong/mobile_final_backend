@@ -36,6 +36,9 @@ public class Post implements Comparable<Post> {
         likes = new ArrayList<>();
         comments = new ArrayList<>();
     }
+    public void initPostPhotoMessageList() {
+        postPhotoMessageList = new ArrayList<>();
+    }
 
     // 按时间比较重载
     @Override
