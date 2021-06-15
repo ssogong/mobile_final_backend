@@ -1,15 +1,12 @@
 package com.tsinghua.course.Biz;
 
-import com.tsinghua.course.Biz.Controller.PostController;
-import com.tsinghua.course.Biz.Controller.TestController;
-import com.tsinghua.course.Biz.Controller.TimerController;
-import com.tsinghua.course.Biz.Controller.UserController;
+import com.tsinghua.course.Biz.Controller.*;
 
 /**
  * @描述 业务类型枚举，所有的业务类型都需要枚举在此类中
  **/
 public enum BizTypeEnum {
-    /** 以下为用户业务类型 */
+    /** 用户业务类型 */
     USER_LOGIN(UserController.class, "/user/login", "用户登录"),
     USER_LOGOUT(UserController.class, "/user/logout", "用户注销"),
     USER_SIGN_UP(UserController.class, "/user/signup", "用户注册"),
@@ -26,6 +23,16 @@ public enum BizTypeEnum {
     POST_ADD(PostController.class, "/post/add", "添加动态"),
     POST_GET_REACTION(PostController.class, "/post/getReaction", "获取动态点赞和评论"),
     POST_ADD_REACTION(PostController.class, "/post/addReaction", "对动态点赞或评论"),
+
+    /** 聊天业务类型 */
+    CHAT_GET_ROOMS(ChatController.class, "/chat/myRooms", "我的所有聊天室"),
+    CHAT_MAKE_ROOM(ChatController.class, "/chat/makeRoom", "创建聊天"),
+    CHAT_SEND_MESSAGE(ChatController.class, "/chat/send", "发送消息"),
+    CHAT_DELETE_MESSAGE(ChatController.class, "/chat/delete", "删除一条信息"),
+    CHAT_GET_MESSAGES(ChatController.class, "/chat/messages", "获取所有聊天记录"),
+    CHAT_GET_MEMBERS_INFO(ChatController.class, "/chat/members", "获取成员信息"),
+    CHAT_INVITE(ChatController.class, "/chat/invite", "邀请用户加入"),
+    CHAT_EXIT(ChatController.class, "/chat/exit", "退出房间"),
 
     /** 定时任务业务测试 */
     LOG_TEST(TimerController.class, null, "定时日志测试"),

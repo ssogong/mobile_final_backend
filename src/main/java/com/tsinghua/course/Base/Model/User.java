@@ -3,6 +3,8 @@ package com.tsinghua.course.Base.Model;
 import com.tsinghua.course.Base.Enum.UserType;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +45,8 @@ public class User {
     String avartar;
     // 联系人列表
     String[] contactList;
+    // 聊天室列表
+    List<Map<String, String>> roomList;
 
 
     // 测试数组
@@ -51,6 +55,10 @@ public class User {
     Map<String, String> testObj;
     // 另一个测试对象，和 Map<String, String> 方式存储的格式是一样的，但是直观很多
     SubObj subObj;
+
+    public User() {
+        roomList = new ArrayList<>();
+    }
 
     public String getUsername() {
         return username;

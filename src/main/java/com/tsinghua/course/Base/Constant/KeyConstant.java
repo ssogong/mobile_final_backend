@@ -27,10 +27,20 @@ public class KeyConstant {
     public static final String AVARTAR_URL = "avartar";
     // 联系人列表
     public static final String CONTACT_LIST = "contactList";
+    // 房间列表
+    public static final String ROOM_LIST = "roomList";
 
     /** 以下为Post关键key */
     // 点赞列表
     public static final String LIKES = "likes";
     // 评论列表
     public static final String COMMENTS = "comments";
+
+    /** 以下为CharRoom关键key */
+    // 房间id
+    public static final String ROOM_ID = "roomId";
+    // 成员列表
+    public static final String USER_LIST = "userList";
+    // 消息列表
+    public static final String MESSAGES = "messages";
 }
