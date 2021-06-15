@@ -11,6 +11,8 @@ public class KeyConstant {
     public static final String PATH = "path";
     // 操作类型
     public static final String BIZ_TYPE = "bizType";
+    // MongoDB id
+    public static final String MONGO_ID = "_id";
 
     /** 以下为User关键key */
     // 用户名
@@ -22,7 +24,13 @@ public class KeyConstant {
     // 生日
     public static final String DATE_OF_BIRTH = "dateOfBirth";
     // 头像url
-    public static final String AVARTAR_URL = "avartarUrl";
+    public static final String AVARTAR_URL = "avartar";
     // 联系人列表
     public static final String CONTACT_LIST = "contactList";
+
+    /** 以下为Post关键key */
+    // 点赞列表
+    public static final String LIKES = "likes";
+    // 评论列表
+    public static final String COMMENTS = "comments";
 }

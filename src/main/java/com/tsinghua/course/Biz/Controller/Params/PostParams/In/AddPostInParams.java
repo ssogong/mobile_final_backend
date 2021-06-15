@@ -14,7 +14,6 @@ import java.util.List;
 @BizType(BizTypeEnum.POST_ADD)
 public class AddPostInParams extends CommonInParams {
     // 文字
-    @Required
     private String post_text_message;
     // 图片
     private List<FileUpload> post_photo_message;

@@ -2,7 +2,9 @@ package com.tsinghua.course.Base.Model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @描述 对应mongodb中的Post集合
@@ -25,11 +27,27 @@ public class Post implements Comparable<Post> {
     List<String> postPhotoMessageList;
     // 动态视频
     String postVideoMessage;
+    // 点赞列表
+    List<Map<String, String>> likes;
+    // 评论列表
+    List<Map<String, String>> comments;
+
+    public Post() {
+        likes = new ArrayList<>();
+        comments = new ArrayList<>();
+    }
 
     // 按时间比较重载
     @Override
     public int compareTo(Post o) {
         return o.getDate().compareTo(getDate());
+    }
+
+    public void addLikes(Map<String, String> m) {
+        likes.add(m);
+    }
+    public void addComments(Map<String, String> m) {
+        comments.add(m);
     }
 
     public String getId() {
@@ -92,6 +110,22 @@ public class Post implements Comparable<Post> {
 
     public void setPostVideoMessage(String postVideoMessage) {
         this.postVideoMessage = postVideoMessage;
+    }
+
+    public List<Map<String, String>> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Map<String, String>> likes) {
+        this.likes = likes;
+    }
+
+    public List<Map<String, String>> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Map<String, String>> comments) {
+        this.comments = comments;
     }
 
 }

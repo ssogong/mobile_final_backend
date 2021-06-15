@@ -9,7 +9,10 @@ import com.tsinghua.course.Biz.BizTypeEnum;
 import com.tsinghua.course.Biz.Controller.Params.CommonInParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
 import com.tsinghua.course.Biz.Controller.Params.PostParams.In.AddPostInParams;
+import com.tsinghua.course.Biz.Controller.Params.PostParams.In.AddPostReactionInParams;
+import com.tsinghua.course.Biz.Controller.Params.PostParams.In.GetPostReactionInParams;
 import com.tsinghua.course.Biz.Controller.Params.PostParams.Out.GetPostsOutParams;
+import com.tsinghua.course.Biz.Controller.Params.PostParams.Out.GetReactionOutParams;
 import com.tsinghua.course.Biz.Processor.PostProcessor;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
 import io.netty.handler.codec.http.multipart.FileUpload;
@@ -94,5 +97,44 @@ public class PostController {
         postProcessor.addPost(post);
         return new CommonOutParams(true);
     }
+    /** 对动态点赞或评论 */
+    @NeedLogin
+    @BizType(BizTypeEnum.POST_ADD_REACTION)
+    public CommonOutParams addReaction(AddPostReactionInParams inParams) {
+        String username = inParams.getUsername();
+        User user = userProcessor.getUserByUsername(username);
+        Post post = postProcessor.getPostById(inParams.getPost_id());
+        Map<String, String> newReaction = new HashMap<>();
+        newReaction.put("sender_username", username);
+        newReaction.put("sender_real_name", user.getRealName());
+        newReaction.put("avartar", user.getAvartar());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        newReaction.put("date", simpleDateFormat.format(new Date()));
 
+        // 先判断是不是点赞信息，否则是评论
+        String isLike = inParams.getLiked();
+        if (isLike != null) {
+            if (isLike.equals("true")) {
+                post.addLikes(newReaction);
+                postProcessor.addLikeById(inParams.getPost_id(), newReaction);
+            }
+            // false 取消点赞?
+        } else {
+            String comment = inParams.getComment();
+            newReaction.put("text_message", comment);
+            post.addComments(newReaction);
+            postProcessor.addCommentById(inParams.getPost_id(), newReaction);
+        }
+
+        return new CommonOutParams(true);
+    }
+
+    /** 获取动态点赞和评论信息 */
+    @NeedLogin
+    @BizType(BizTypeEnum.POST_GET_REACTION)
+    public GetReactionOutParams getReaction(GetPostReactionInParams inParams) {
+        String postId = inParams.getPost_id();
+        Post post = postProcessor.getPostById(postId);
+        return new GetReactionOutParams(post.getLikes(), post.getComments());
+    }
 }
