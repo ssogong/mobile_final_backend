@@ -6,10 +6,10 @@ import com.tsinghua.course.Base.Constant.GlobalConstant;
 import com.tsinghua.course.Base.Model.ChatRoom;
 import com.tsinghua.course.Base.Model.User;
 import com.tsinghua.course.Biz.BizTypeEnum;
-import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.DeleteMessageInParams;
-import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.MakeRoomInParams;
-import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.SendMessageInParams;
+import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.*;
+import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetMessagesOutParams;
 import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetMyRoomsOutParams;
+import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetUserListOutParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonInParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
 import com.tsinghua.course.Biz.Processor.ChatProcessor;
@@ -124,6 +124,7 @@ public class ChatController {
     /**
      * 删除一条消息
      */
+    @NeedLogin
     @BizType(BizTypeEnum.CHAT_DELETE_MESSAGE)
     public CommonOutParams deleteMessage(DeleteMessageInParams inParams) throws Exception {
         String roomId = inParams.getRoom_id();
@@ -138,6 +139,27 @@ public class ChatController {
         }
         chatProcessor.updateMessages(roomId, messages);
         return new CommonOutParams(true);
+    }
+
+    /**
+     * 获取消息列表
+     */
+    @NeedLogin
+    @BizType(BizTypeEnum.CHAT_GET_MESSAGES)
+    public GetMessagesOutParams getMessages(GetMessagesInParams inParams) throws Exception {
+        String roomId = inParams.getRoom_id();
+        ChatRoom room = chatProcessor.getRoomByRoomId(roomId);
+        return new GetMessagesOutParams(room.getMessages());
+    }
+
+    /**
+     * 获取成员列表
+     */
+    @BizType(BizTypeEnum.CHAT_GET_MEMBERS_INFO)
+    public GetUserListOutParams getUserList(GetUserListInParams inParams) throws Exception {
+        String roomId = inParams.getRoom_id();
+        ChatRoom room = chatProcessor.getRoomByRoomId(roomId);
+        return new GetUserListOutParams(room.getUserList());
     }
 
     static String DownloadFileToLocal(FileUpload file) throws IOException {
