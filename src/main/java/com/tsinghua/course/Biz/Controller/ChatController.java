@@ -2,16 +2,24 @@ package com.tsinghua.course.Biz.Controller;
 
 import com.tsinghua.course.Base.Annotation.BizType;
 import com.tsinghua.course.Base.Annotation.NeedLogin;
+import com.tsinghua.course.Base.Constant.GlobalConstant;
 import com.tsinghua.course.Base.Model.ChatRoom;
 import com.tsinghua.course.Base.Model.User;
 import com.tsinghua.course.Biz.BizTypeEnum;
 import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.MakeRoomInParams;
+import com.tsinghua.course.Biz.Controller.Params.ChatParams.In.SendMessageInParams;
+import com.tsinghua.course.Biz.Controller.Params.ChatParams.Out.GetMyRoomsOutParams;
+import com.tsinghua.course.Biz.Controller.Params.CommonInParams;
 import com.tsinghua.course.Biz.Controller.Params.CommonOutParams;
 import com.tsinghua.course.Biz.Processor.ChatProcessor;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
+import io.netty.handler.codec.http.multipart.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -67,6 +75,60 @@ public class ChatController {
         chatProcessor.insertRoom(newRoom);
 
         return new CommonOutParams(true);
+    }
+
+    /**
+     * 获取所有加入的聊天室
+     */
+    @NeedLogin
+    @BizType(BizTypeEnum.CHAT_GET_ROOMS)
+    public GetMyRoomsOutParams getMyRooms(CommonInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        User user = userProcessor.getUserByUsername(username);
+        return new GetMyRoomsOutParams(user.getRoomList());
+    }
+    /**
+     * 发送一条消息
+     */
+    @NeedLogin
+    @BizType(BizTypeEnum.CHAT_SEND_MESSAGE)
+    public CommonOutParams sendMessage(SendMessageInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        String roomId = inParams.getRoom_id();
+        Map<String, String> message = new HashMap<>();
+        message.put("message_id", UUID.randomUUID().toString());
+        message.put("sender_username", username);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        message.put("date", simpleDateFormat.format(new Date()));
+        //文字 / 语音 / 视频 / 定位
+        if (inParams.getText_message() != null) {
+            message.put("text_message", inParams.getText_message());
+        } else if (inParams.getAudio_message() != null) {
+            FileUpload file = inParams.getAudio_message();
+            String url = DownloadFileToLocal(file);
+            message.put("audio_message", url);
+        } else if (inParams.getVideo_message() != null) {
+            FileUpload file = inParams.getVideo_message();
+            String url = DownloadFileToLocal(file);
+            message.put("video_message", url);
+        } else {
+            message.put("location_message", inParams.getLocation_message());
+        }
+        // 添加到room
+        chatProcessor.addMessageToList(roomId, message);
+
+        return new CommonOutParams(true);
+    }
+
+    static String DownloadFileToLocal(FileUpload file) throws IOException {
+        String oldFileName = file.getFilename();
+        String newFileName = UUID.randomUUID().toString() + oldFileName.substring(oldFileName.lastIndexOf("."));
+        String url = GlobalConstant.STATIC_PATH + newFileName;
+        FileOutputStream out = new FileOutputStream(url);
+        out.write(file.get());
+        out.flush();
+        out.close();
+        return url;
     }
 
 }

@@ -71,13 +71,7 @@ public class PostController {
         if (imageList != null) {
             List<String> tmpImageList = new ArrayList<>();
             for (FileUpload file : imageList) {
-                String oldFileName = file.getFilename();
-                String newFileName = UUID.randomUUID().toString() + oldFileName.substring(oldFileName.lastIndexOf("."));
-                String url = GlobalConstant.STATIC_PATH + newFileName;
-                FileOutputStream out = new FileOutputStream(url);
-                out.write(file.get());
-                out.flush();
-                out.close();
+                String url = ChatController.DownloadFileToLocal(file);
                 tmpImageList.add(url);
             }
             post.setPostPhotoMessageList(tmpImageList);
@@ -85,13 +79,7 @@ public class PostController {
         // 视频
         FileUpload videoFile = inParams.getPost_video_message();
         if (videoFile != null) {
-            String oldFileName = videoFile.getFilename();
-            String newFileName = UUID.randomUUID().toString() + oldFileName.substring(oldFileName.lastIndexOf("."));
-            String url = GlobalConstant.STATIC_PATH + newFileName;
-            FileOutputStream out = new FileOutputStream(url);
-            out.write(videoFile.get());
-            out.flush();
-            out.close();
+            String url = ChatController.DownloadFileToLocal(videoFile);
             post.setPostVideoMessage(url);
         }
         postProcessor.addPost(post);

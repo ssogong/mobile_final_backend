@@ -159,4 +159,12 @@ public class User {
     public void setContactList(String[] contactList) {
         this.contactList = contactList;
     }
+
+    public List<Map<String, String>> getRoomList() {
+        return roomList;
+    }
+
+    public void setRoomList(List<Map<String, String>> roomList) {
+        this.roomList = roomList;
+    }
 }

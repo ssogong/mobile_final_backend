@@ -39,4 +39,11 @@ public class ChatProcessor {
         Update update = new Update().addToSet(KeyConstant.USER_LIST, user_info);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
+    /** 添加一条消息 */
+    public void addMessageToList(String roomId, Map<String, String> message) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.ROOM_ID).is(roomId));
+        Update update = new Update().addToSet(KeyConstant.MESSAGES, message);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
 }
