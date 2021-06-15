@@ -55,4 +55,11 @@ public class UserProcessor {
         Update update = new Update().addToSet(KeyConstant.CONTACT_LIST, newUsername);
         mongoTemplate.updateFirst(query, update, User.class);
     }
+    /** 删除联系人 */
+    public void deleteFromContact(String username, String deleteUsername) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(KeyConstant.USERNAME).is(username));
+        Update update = new Update().pull(KeyConstant.CONTACT_LIST, deleteUsername);
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
 }

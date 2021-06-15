@@ -12,8 +12,11 @@ public enum UserWarnEnum implements ExceptionInterface {
     SIGNUP_NULL_FAILED("UserWarn004", "用户名或密码不能为空"),
     SIGNUP_EXIST_FAILED("UserWarn005", "用户已存在"),
 
+
     EDIT_FAILED("UserWarn006", "修改个人信息失败"),
     CHANGE_PASS_FAILED("UserWarn007", "修改密码失败"),
+
+    SEARCH_NULL_FAILED("UserWarn008", "用户不存在")
     ;
 
     UserWarnEnum(String code, String msg) {

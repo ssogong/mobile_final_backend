@@ -14,6 +14,7 @@ import com.tsinghua.course.Biz.Controller.Params.UserParams.In.*;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.AvartarOutParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.ContactOutParams;
 import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.LoginOutParams;
+import com.tsinghua.course.Biz.Controller.Params.UserParams.Out.SearchUserOutParams;
 import com.tsinghua.course.Biz.Processor.UserProcessor;
 import com.tsinghua.course.Frame.Util.*;
 import io.netty.channel.ChannelHandlerContext;
@@ -136,6 +137,16 @@ public class UserController {
         userProcessor.uploadImage(username, url);
         return new AvartarOutParams(url);
     }
+    /** 搜索用户 */
+    @NeedLogin
+    @BizType(BizTypeEnum.USER_SEARCH)
+    public SearchUserOutParams searchUser(SearchUserInParams inParams) throws Exception {
+        String searchUsername = inParams.getSearch_username();
+        User user = userProcessor.getUserByUsername(searchUsername);
+        if (user == null)
+            throw new CourseWarn(UserWarnEnum.SEARCH_NULL_FAILED);
+        return new SearchUserOutParams(user);
+    }
     /** 获取联系人 */
     @NeedLogin
     @BizType(BizTypeEnum.CONTACT_GET)
@@ -148,11 +159,23 @@ public class UserController {
     /** 添加联系人 */
     @NeedLogin
     @BizType(BizTypeEnum.CONTACT_ADD)
-    public CommonOutParams addToContact(AddToContactInParams inParams) {
+    public CommonOutParams addToContact(AddToContactInParams inParams) throws Exception{
         String username = inParams.getUsername();
         String newUsername = inParams.getNew_username();
         userProcessor.addToContact(username, newUsername);
         userProcessor.addToContact(newUsername, username);
+        return new CommonOutParams(true);
+    }
+    /** 删除联系人，对方列表里也会删除*/
+    @NeedLogin
+    @BizType(BizTypeEnum.CONTACT_DELETE)
+    public CommonOutParams deleteFromContact(DeleteUserInParams inParams) throws Exception {
+        String username = inParams.getUsername();
+        String deleteUsername = inParams.getDelete_username();
+        User user = userProcessor.getUserByUsername(username);
+        User deleteUser = userProcessor.getUserByUsername(deleteUsername);
+        userProcessor.deleteFromContact(username, deleteUsername);
+        userProcessor.deleteFromContact(deleteUsername, username);
         return new CommonOutParams(true);
     }
 }
